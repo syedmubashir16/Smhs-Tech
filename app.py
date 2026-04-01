@@ -308,11 +308,12 @@ HTML = """
 """
 
 components.html(HTML, height=900, scrolling=False)
-        if submit:
-            if name and details:
-                st.success(f"Requirement logged for {name}. Smhs Tech will reach out shortly.")
-            else:
-                st.error("Please provide a Business Name and Project Context.")
+
+if submit:
+    if name and details:
+        st.success(f"Requirement logged for {name}. Smhs Tech will reach out shortly.")
+    else:
+        st.error("Please provide a Business Name and Project Context.")
 
 st.markdown("---")
 st.caption("© 2026 Smhs Tech | Built with Python")
