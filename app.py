@@ -1,174 +1,313 @@
 import streamlit as st
-import time
 import streamlit.components.v1 as components
 
-# --- CONFIG & STYLING ---
-st.set_page_config(page_title="Smhs Tech | Mubashir", page_icon="🧬", layout="wide")
+st.set_page_config(
+    page_title="Smhs Tech | Mubashir",
+    page_icon="🧬",
+    layout="wide"
+)
 
+# Hide Streamlit default UI chrome
 st.markdown("""
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-    /* Main Background & Glassmorphism */
-    .stApp {
-        background: radial-gradient(circle at top right, #1a1a2e, #16213e, #0f3460);
-        color: #e94560;
-    }
-    
-    /* Animated Title */
-    .hero-title {
-        font-family: 'Courier New', Courier, monospace;
-        font-size: 4rem;
-        font-weight: 800;
-        background: -webkit-linear-gradient(#00d4ff, #005f73);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: fadeInDown 1s;
-    }
-
-    /* Project Cards with Glow & Hover Animation */
-    .card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 25px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 20px;
-    }
-    .card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        border: 1px solid #00d4ff;
-    }
-
-    /* Terminal Text Effect */
-    .terminal {
-        background: #000;
-        color: #00ff41;
-        padding: 15px;
-        border-radius: 5px;
-        font-family: 'Courier New', monospace;
-        border-left: 4px solid #00ff41;
-    }
-
-    /* Status Pulse */
-    .pulse {
-        height: 10px;
-        width: 10px;
-        background-color: #00ff41;
-        border-radius: 50%;
-        display: inline-block;
-        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7);
-        animation: pulse-green 2s infinite;
-    }
-    @keyframes pulse-green {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 255, 65, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
-    }
+    #MainMenu, footer, header { visibility: hidden; }
+    .block-container { padding: 0 !important; max-width: 100% !important; }
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# --- HERO SECTION ---
-st.markdown('<h1 class="hero-title animate__animated animate__fadeInDown">SMHS TECH</h1>', unsafe_allow_html=True)
-st.markdown("""
-    <div class="terminal">
-        > INITIALIZING INTERFACE... <br>
-        > MUBASHIR: ERP & AI ENGINEER DETECTED <br>
-        > LOCATION: KARACHI_PK <br>
-        > STATUS: <span class="pulse"></span> ONLINE
+HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060d1a;
+    color: #c9d6e3;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* Animated scanline */
+  .scanline {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.6), transparent);
+    z-index: 10;
+    animation: scan 4s linear infinite;
+  }
+  @keyframes scan { from { top: 0; } to { top: 100vh; } }
+
+  .wrap {
+    position: relative; z-index: 1;
+    max-width: 960px; margin: 0 auto;
+    padding: 2.5rem 1.5rem 3rem;
+  }
+
+  /* ── HERO ── */
+  .hero { padding: 3rem 0 2rem; }
+
+  .hero-logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 400;
+    color: transparent;
+    background: linear-gradient(135deg, #00c8ff 0%, #0057c2 55%, #00c8ff 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s ease infinite, fadeDown 0.8s ease both;
+    letter-spacing: 0.12em;
+  }
+  @keyframes shimmer {
+    0%,100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-24px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .terminal-box {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.82rem;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(0,200,255,0.25);
+    border-left: 3px solid #00c8ff;
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+    line-height: 2.1;
+    animation: fadeDown 0.8s 0.3s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  .terminal-box .prompt { color: #00ff88; }
+  .terminal-box .val    { color: #00c8ff; }
+
+  .pulse-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.6); }
+    50%     { box-shadow: 0 0 0 7px rgba(0,255,136,0); }
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: #00c8ff;
+    text-transform: uppercase;
+    margin: 2.8rem 0 1rem;
+    opacity: 0.7;
+  }
+
+  /* ── PROJECT CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 580px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,200,255,0.15);
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(22px);
+    animation: riseIn 0.6s ease forwards;
+  }
+  .card:hover {
+    transform: translateY(-6px) !important;
+    border-color: rgba(0,200,255,0.6);
+    box-shadow: 0 8px 32px rgba(0,200,255,0.12),
+                inset 0 0 0 1px rgba(0,200,255,0.08);
+  }
+  @keyframes riseIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(1) { animation-delay: 0.5s; }
+  .card:nth-child(2) { animation-delay: 0.65s; }
+  .card:nth-child(3) { animation-delay: 0.8s; }
+  .card:nth-child(4) { animation-delay: 0.95s; }
+
+  .card-icon  { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .card-title {
+    font-size: 1.05rem; font-weight: 700;
+    color: #e0f4ff; margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  .card-desc {
+    font-size: 0.88rem; color: #7a96af;
+    line-height: 1.55; margin-bottom: 0.75rem;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.68rem;
+    padding: 3px 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,255,136,0.3);
+    background: rgba(0,255,136,0.07);
+    color: #00ff88;
+  }
+  .badge.blue {
+    border-color: rgba(0,200,255,0.3);
+    background: rgba(0,200,255,0.07);
+    color: #00c8ff;
+  }
+
+  /* ── TECH STACK ── */
+  .stack-row {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    margin-top: 0.5rem;
+    animation: fadeDown 0.8s 1.1s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.73rem;
+    padding: 5px 14px;
+    border: 1px solid rgba(0,200,255,0.22);
+    border-radius: 4px;
+    color: #7ab8cf;
+    background: rgba(0,200,255,0.04);
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .tag:hover {
+    border-color: #00c8ff;
+    color: #00c8ff;
+    background: rgba(0,200,255,0.1);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.3), transparent);
+    margin: 2rem 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer { text-align: center; padding: 1rem 0; }
+  .footer p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(122,150,175,0.45);
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanline"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-logo">SMHS TECH</div>
+    <div class="terminal-box">
+      <span class="prompt">&gt;</span> INITIALIZING INTERFACE...<br>
+      <span class="prompt">&gt;</span> ENGINEER: <span class="val">MUBASHIR — ERP &amp; AI</span><br>
+      <span class="prompt">&gt;</span> LOCATION: <span class="val">KARACHI_PK</span><br>
+      <span class="prompt">&gt;</span> STATUS:&nbsp;<span class="pulse-dot"></span><span class="val">ONLINE</span>
     </div>
-    """, unsafe_allow_html=True)
+  </div>
 
-st.write("##")
+  <!-- PROJECTS -->
+  <div class="section-label">// Featured Projects</div>
+  <div class="cards-grid">
 
-# --- GRID LAYOUT ---
-col1, col2 = st.columns([1, 1], gap="large")
-
-with col1:
-    st.markdown("### 🛠️ Specialized Engineering")
-    st.write("Building formula-driven automation for industrial scale.")
-    
-    # Project 1: AI Authenticity
-    st.markdown('''
-    <div class="card animate__animated animate__fadeInLeft">
-        <h3 style="color:#00d4ff;">🛡️ AI Authenticity Detector</h3>
-        <p>B2B API for synthetic media detection. High-concurrency FastAPI backend.</p>
-        <code style="color:#00ff41;">Status: Production Ready</code>
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <div class="card-title">AI Authenticity Detector</div>
+      <div class="card-desc">B2B API for synthetic media detection. High-concurrency FastAPI backend with dual PyTorch / TensorFlow models and explainability features.</div>
+      <span class="badge">Production Ready</span>
     </div>
-    ''', unsafe_allow_html=True)
 
-    # Project 2: F1 Mission Control
-    st.markdown('''
-    <div class="card animate__animated animate__fadeInLeft" style="animation-delay: 0.2s;">
-        <h3 style="color:#00d4ff;">🏎️ F1 2026 Visualizer</h3>
-        <p>Mission Control style telemetry. Active aero animations & live timing tables.</p>
-        <code style="color:#00ff41;">Engine: Python / Streamlit</code>
+    <div class="card">
+      <div class="card-icon">🏎️</div>
+      <div class="card-title">F1 2026 Visualizer</div>
+      <div class="card-desc">Mission Control style telemetry dashboard. Active aero animations &amp; live timing tables built in Python / Streamlit.</div>
+      <span class="badge blue">Python / Streamlit</span>
     </div>
-    ''', unsafe_allow_html=True)
 
-with col2:
-    st.markdown("### 🏢 Industrial Impact")
-    st.write("Modernizing the core of Pakistan's textile industry.")
-
-    # Project 3: Alkaram ERP
-    st.markdown('''
-    <div class="card animate__animated animate__fadeInRight">
-        <h3 style="color:#00d4ff;">📊 Spinning Mill Dashboard</h3>
-        <p>Automated waste mapping & Oracle ERP data sync for Alkaram Textile Mills.</p>
-        <code style="color:#00ff41;">Impact: -90% Manual Entry</code>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Spinning Mill Dashboard</div>
+      <div class="card-desc">Automated waste mapping &amp; Oracle ERP data sync for Alkaram Textile Mills. Reduced manual entry by 90%.</div>
+      <span class="badge">−90% Manual Entry</span>
     </div>
-    ''', unsafe_allow_html=True)
 
-    # Project 4: Geolocation
-    st.markdown('''
-    <div class="card animate__animated animate__fadeInRight" style="animation-delay: 0.2s;">
-        <h3 style="color:#00d4ff;">📍 Precision Geo-Timing</h3>
-        <p>High-precision Aladhan API integration with sub-second accuracy.</p>
-        <code style="color:#00ff41;">Deployed: Streamlit Cloud</code>
+    <div class="card">
+      <div class="card-icon">📍</div>
+      <div class="card-title">Precision Geo-Timing</div>
+      <div class="card-desc">High-precision Aladhan API integration delivering sub-second accuracy for prayer time calculation. Deployed on Streamlit Cloud.</div>
+      <span class="badge blue">Deployed: Cloud</span>
     </div>
-    ''', unsafe_allow_html=True)
 
-# --- SERVICES & TECH STACK ---
-st.write("---")
-st.markdown('<h2 style="text-align: center;">TECH STACK & CAPABILITIES</h2>', unsafe_allow_html=True)
+  </div>
 
-tech_col1, tech_col2, tech_col3, tech_col4 = st.columns(4)
-with tech_col1: st.button("🐍 Python / FastAPI")
-with tech_col2: st.button("🤖 Deep Learning")
-with tech_col3: st.button("🏢 Oracle ERP")
-with tech_col4: st.button("☁️ Cloud Deploy")
+  <!-- TECH STACK -->
+  <div class="section-label">// Tech Stack &amp; Capabilities</div>
+  <div class="stack-row">
+    <div class="tag">Python</div>
+    <div class="tag">FastAPI</div>
+    <div class="tag">PyTorch</div>
+    <div class="tag">TensorFlow</div>
+    <div class="tag">Oracle ERP</div>
+    <div class="tag">Streamlit</div>
+    <div class="tag">Deep Learning</div>
+    <div class="tag">Cloud Deploy</div>
+  </div>
 
-# --- FOOTER ---
-st.write("---")
+  <div class="divider"></div>
 
-# --- FOOTER SECTION ---
-with st.container():
-    # Professional Footer Branding
-    st.markdown("""
-        <div style="text-align: center; color: #8892b0; padding: 20px;">
-            <p><b>Designed by Smhs Tech © 2026</b></p>
-            <p>Karachi, Sindh, Pakistan</p>
-        </div>
-    """, unsafe_allow_html=True)
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>SMHS TECH &copy; 2026 &nbsp;|&nbsp; KARACHI, SINDH, PAKISTAN</p>
+  </div>
 
-    # --- CONTACT FORM SECTION ---
-    st.subheader("📩 Start a Project with Smhs Tech")
-    
-    # Crucial: Use st.form to group these inputs
-    with st.form("inquiry_form", clear_on_submit=True):
-        col_a, col_b = st.columns(2)
-        
-        with col_a:
-            name = st.text_input("Business Name")
-        with col_b:
-            needs = st.multiselect("Services Required", ["ERP Automation", "AI/ML Integration", "Web Dev", "SEO"])
-            
-        details = st.text_area("Project Context & Goals")
-        
-        # The submit button MUST be the last item in the form block
-        submit = st.form_submit_button("Submit Proposal")
-        
+</div>
+</body>
+</html>
+"""
+
+components.html(HTML, height=900, scrolling=False)
         if submit:
             if name and details:
                 st.success(f"Requirement logged for {name}. Smhs Tech will reach out shortly.")
