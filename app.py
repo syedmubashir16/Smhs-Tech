@@ -139,19 +139,40 @@ with tech_col3: st.button("🏢 Oracle ERP")
 with tech_col4: st.button("☁️ Cloud Deploy")
 
 # --- FOOTER ---
-st.write("##")
+st.write("---")
+
+# --- FOOTER SECTION ---
 with st.container():
+    # Professional Footer Branding
     st.markdown("""
         <div style="text-align: center; color: #8892b0; padding: 20px;">
-            <p>Designed by Smhs Tech © 2026</p>
+            <p><b>Designed by Smhs Tech © 2026</b></p>
             <p>Karachi, Sindh, Pakistan</p>
         </div>
     """, unsafe_allow_html=True)
-        name = st.text_input("Business Name")
-        needs = st.multiselect("Service Needed", ["ERP Automation", "AI/ML Integration", "Web Dev", "SEO"])
-        details = st.text_area("Project Context")
-        if st.form_submit_button("Submit to Smhs Tech"):
-            st.success("Proposal request received. We will align our workflow and contact you.")
+
+    # --- CONTACT FORM SECTION ---
+    st.subheader("📩 Start a Project with Smhs Tech")
+    
+    # Crucial: Use st.form to group these inputs
+    with st.form("inquiry_form", clear_on_submit=True):
+        col_a, col_b = st.columns(2)
+        
+        with col_a:
+            name = st.text_input("Business Name")
+        with col_b:
+            needs = st.multiselect("Services Required", ["ERP Automation", "AI/ML Integration", "Web Dev", "SEO"])
+            
+        details = st.text_area("Project Context & Goals")
+        
+        # The submit button MUST be the last item in the form block
+        submit = st.form_submit_button("Submit Proposal")
+        
+        if submit:
+            if name and details:
+                st.success(f"Requirement logged for {name}. Smhs Tech will reach out shortly.")
+            else:
+                st.error("Please provide a Business Name and Project Context.")
 
 st.markdown("---")
 st.caption("© 2026 Smhs Tech | Built with Python")
