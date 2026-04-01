@@ -1,105 +1,152 @@
 import streamlit as st
+import time
 
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="Mubashir | Smhs Tech", page_icon="⚡", layout="wide")
+# --- CONFIG & STYLING ---
+st.set_page_config(page_title="Smhs Tech | Mubashir", page_icon="🧬", layout="wide")
 
-# --- CUSTOM CSS ---
 st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-    .main { background-color: #0e1117; }
-    .stButton>button { width: 100%; border-radius: 5px; background-color: #00d4ff; color: black; }
-    .project-box {
-        border: 1px solid #30363d;
-        padding: 20px;
-        border-radius: 15px;
-        background-color: #161b22;
-        margin-bottom: 20px;
-        height: 250px;
+    /* Main Background & Glassmorphism */
+    .stApp {
+        background: radial-gradient(circle at top right, #1a1a2e, #16213e, #0f3460);
+        color: #e94560;
     }
-    .service-card {
-        text-align: center;
+    
+    /* Animated Title */
+    .hero-title {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 4rem;
+        font-weight: 800;
+        background: -webkit-linear-gradient(#00d4ff, #005f73);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInDown 1s;
+    }
+
+    /* Project Cards with Glow & Hover Animation */
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 20px;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        border: 1px solid #00d4ff;
+    }
+
+    /* Terminal Text Effect */
+    .terminal {
+        background: #000;
+        color: #00ff41;
         padding: 15px;
-        border-radius: 10px;
-        background: #1f2937;
+        border-radius: 5px;
+        font-family: 'Courier New', monospace;
+        border-left: 4px solid #00ff41;
+    }
+
+    /* Status Pulse */
+    .pulse {
+        height: 10px;
+        width: 10px;
+        background-color: #00ff41;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7);
+        animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 255, 65, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- SIDEBAR ---
-with st.sidebar:
-    st.title("🚀 Smhs Tech")
-    st.markdown("---")
-    page = st.radio("Navigation", ["Identity", "Portfolio", "Services", "Inquiry"])
-    st.markdown("---")
-    st.caption("Based in Karachi, Pakistan")
+# --- HERO SECTION ---
+st.markdown('<h1 class="hero-title animate__animated animate__fadeInDown">SMHS TECH</h1>', unsafe_allow_html=True)
+st.markdown("""
+    <div class="terminal">
+        > INITIALIZING INTERFACE... <br>
+        > MUBASHIR: ERP & AI ENGINEER DETECTED <br>
+        > LOCATION: KARACHI_PK <br>
+        > STATUS: <span class="pulse"></span> ONLINE
+    </div>
+    """, unsafe_allow_html=True)
 
-# --- PAGE 1: IDENTITY (HOME) ---
-if page == "Identity":
-    col1, col2 = st.columns([2, 1], gap="large")
-    with col1:
-        st.title("Mubashir")
-        st.subheader("ERP Executive & AI Developer")
-        st.write("""
-            I bridge the gap between industrial operations and intelligent automation. 
-            By day, I manage complex inventory and ERP workflows at **Alkaram Textile Mills**; 
-            by night, I lead **Smhs Tech**, developing deployable AI systems that solve 
-            real-world business friction.
-        """)
-        st.markdown("---")
-        st.write("📍 **Location:** Karachi, Sindh")
-        st.write("🎓 **Education:** BBA (IT) | Specialist in Deep Learning")
+st.write("##")
 
-# --- PAGE 2: PORTFOLIO ---
-elif page == "Portfolio":
-    st.title("Solutions & Deployments")
-    st.write("A showcase of scalable, formula-driven applications.")
+# --- GRID LAYOUT ---
+col1, col2 = st.columns([1, 1], gap="large")
+
+with col1:
+    st.markdown("### 🛠️ Specialized Engineering")
+    st.write("Building formula-driven automation for industrial scale.")
     
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown('''<div class="project-box">
-            <h3>🛡️ AI Authenticity Detector</h3>
-            <p>A B2B API framework designed to detect synthetic media and deepfakes. 
-            Built with a FastAPI backend for high-concurrency social media monitoring.</p>
-        </div>''', unsafe_allow_html=True)
+    # Project 1: AI Authenticity
+    st.markdown('''
+    <div class="card animate__animated animate__fadeInLeft">
+        <h3 style="color:#00d4ff;">🛡️ AI Authenticity Detector</h3>
+        <p>B2B API for synthetic media detection. High-concurrency FastAPI backend.</p>
+        <code style="color:#00ff41;">Status: Production Ready</code>
+    </div>
+    ''', unsafe_allow_html=True)
 
-        st.markdown('''<div class="project-box">
-            <h3>🏎️ F1 Mission Control</h3>
-            <p>A 2026-regulation compliant visualizer. Features active aero animations 
-            and real-time telemetry tables using custom Python logic.</p>
-        </div>''', unsafe_allow_html=True)
+    # Project 2: F1 Mission Control
+    st.markdown('''
+    <div class="card animate__animated animate__fadeInLeft" style="animation-delay: 0.2s;">
+        <h3 style="color:#00d4ff;">🏎️ F1 2026 Visualizer</h3>
+        <p>Mission Control style telemetry. Active aero animations & live timing tables.</p>
+        <code style="color:#00ff41;">Engine: Python / Streamlit</code>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    with c2:
-        st.markdown('''<div class="project-box">
-            <h3>📊 Textile Analytics Hub</h3>
-            <p>Eliminated manual data entry at A Large textile mill by automating waste mapping 
-            and production sync using dynamic Python-to-Excel pipelines.</p>
-        </div>''', unsafe_allow_html=True)
+with col2:
+    st.markdown("### 🏢 Industrial Impact")
+    st.write("Modernizing the core of Pakistan's textile industry.")
 
-        st.markdown('''<div class="project-box">
-            <h3>📍 Precision Geolocation</h3>
-            <p>Deployed Streamlit app utilizing Aladhan API for sub-second 
-            location-based timing accuracy.</p>
-        </div>''', unsafe_allow_html=True)
+    # Project 3: Alkaram ERP
+    st.markdown('''
+    <div class="card animate__animated animate__fadeInRight">
+        <h3 style="color:#00d4ff;">📊 Spinning Mill Dashboard</h3>
+        <p>Automated waste mapping & Oracle ERP data sync for Alkaram Textile Mills.</p>
+        <code style="color:#00ff41;">Impact: -90% Manual Entry</code>
+    </div>
+    ''', unsafe_allow_html=True)
 
-# --- PAGE 3: SERVICES ---
-elif page == "Services":
-    st.title("What Smhs Tech Does")
-    s1, s2, s3 = st.columns(3)
-    
-    with s1:
-        st.markdown('<div class="service-card"><h3>Inventory Auto</h3><p>Oracle ERP sync & automation</p></div>', unsafe_allow_html=True)
-    with s2:
-        st.markdown('<div class="service-card"><h3>Custom AI</h3><p>Deep Learning & Object Detection</p></div>', unsafe_allow_html=True)
-    with s3:
-        st.markdown('<div class="service-card"><h3>Web Tech</h3><p>FastAPI, Streamlit & SEO</p></div>', unsafe_allow_html=True)
-    
-    st.markdown("---")
+    # Project 4: Geolocation
+    st.markdown('''
+    <div class="card animate__animated animate__fadeInRight" style="animation-delay: 0.2s;">
+        <h3 style="color:#00d4ff;">📍 Precision Geo-Timing</h3>
+        <p>High-precision Aladhan API integration with sub-second accuracy.</p>
+        <code style="color:#00ff41;">Deployed: Streamlit Cloud</code>
+    </div>
+    ''', unsafe_allow_html=True)
 
-# --- PAGE 4: INQUIRY ---
-elif page == "Inquiry":
-    st.title("Get a Quotation")
-    st.write("Typical project delivery: 40-60 days.")
-    with st.form("smhs_form"):
+# --- SERVICES & TECH STACK ---
+st.write("---")
+st.markdown('<h2 style="text-align: center;">TECH STACK & CAPABILITIES</h2>', unsafe_allow_html=True)
+
+tech_col1, tech_col2, tech_col3, tech_col4 = st.columns(4)
+with tech_col1: st.button("🐍 Python / FastAPI")
+with tech_col2: st.button("🤖 Deep Learning")
+with tech_col3: st.button("🏢 Oracle ERP")
+with tech_col4: st.button("☁️ Cloud Deploy")
+
+# --- FOOTER ---
+st.write("##")
+with st.container():
+    st.markdown("""
+        <div style="text-align: center; color: #8892b0; padding: 20px;">
+            <p>Designed by Smhs Tech © 2026</p>
+            <p>Karachi, Sindh, Pakistan</p>
+        </div>
+    """, unsafe_allow_html=True)
         name = st.text_input("Business Name")
         needs = st.multiselect("Service Needed", ["ERP Automation", "AI/ML Integration", "Web Dev", "SEO"])
         details = st.text_area("Project Context")
