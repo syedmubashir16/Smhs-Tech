@@ -309,6 +309,14 @@ HTML = """
 
 components.html(HTML, height=900, scrolling=False)
 
+st.markdown("---")
+st.subheader("📬 Get in Touch")
+
+with st.form("contact_form"):
+    name = st.text_input("Business Name")
+    details = st.text_area("Project Context")
+    submit = st.form_submit_button("Send Requirement")
+
 if submit:
     if name and details:
         st.success(f"Requirement logged for {name}. Smhs Tech will reach out shortly.")
