@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import streamlit.components.v1 as components
 
 # --- CONFIG & STYLING ---
 st.set_page_config(page_title="Smhs Tech | Mubashir", page_icon="🧬", layout="wide")
